@@ -7,6 +7,7 @@ import UserPlusIcon from '@heroicons/react/24/solid/UserPlusIcon';
 import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
 import XCircleIcon from '@heroicons/react/24/solid/XCircleIcon';
 import { SvgIcon } from '@mui/material';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 
 export const items = [
   {
@@ -15,6 +16,15 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <ChartBarIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Books',
+    path: '/books',
+    icon: (
+      <SvgIcon fontSize="small">
+        <AutoStoriesIcon />
       </SvgIcon>
     )
   },
