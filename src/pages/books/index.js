@@ -240,6 +240,14 @@ const Books = () => {
     getUpdateData(data);
   };
 
+  const startLoading = () => {
+    setIsDataLoading(true);
+  }
+
+  const stopLoading = () => {
+    setIsDataLoading(false);
+  }
+
   const getUpdateData = (data) => {
     setCurrentData(data);
     setBookModal(true);
@@ -383,6 +391,10 @@ const Books = () => {
     setBookModal(true);
   };
 
+  const getLatestBooks = (data) => {
+    setBooks(data);
+  };
+
   const closeBookModal = (e) => {
     setBookModal(false);
     setCurrentData("");
@@ -462,7 +474,7 @@ const Books = () => {
                 </Button>
               </div>
             </Stack>
-            <BooksSearch />
+            <BooksSearch sendBooks={getLatestBooks} startLoading={startLoading} stopLoading={stopLoading}/>
 
             <TableComponent
                 tableHeader={tableHeader}
