@@ -24,7 +24,7 @@ export const BookModal = (props) => {
   const [bookName, setBookName] = useState('');
   const [subject, setSubject] = useState('0');
   const [level, setLevel] = useState('0');
-  const [publisher, setPublisher] = useState('0');
+  const [publisher, setPublisher] = useState('');
   const [syllabus, setSyllabus] = useState([]);
   const [subjectData, setSubjectData] = useState([]);
   const [levelData, setLevelData] = useState([]);
@@ -36,6 +36,11 @@ export const BookModal = (props) => {
   useEffect(() => {
     const data = props.currentData;
     setCurrentId((data && data.id) ? data.id : '')
+    setBookName((data && data.bookName != null && data.bookName != undefined) ? data.bookName : '')
+    setSubject((data && data.subject_id != null && data.subject_id != null) ? data.subject_id : '0')
+    setLevel((data && data.level_id != null && data.level_id != undefined) ? data.level_id : '0')
+    setPublisher((data && data.publisher != null && data.publisher != undefined) ? data.publisher : '')
+    setSyllabus((data && data.syllabus_id != null && data.syllabus_id != undefined) ? data.syllabus_id.split(',').map(Number) : [])
   }, [props.currentData]);
 
   useEffect(() => {
@@ -160,13 +165,10 @@ export const BookModal = (props) => {
         syllabus: syllabus
       };
 
-      addNewBook(data);
-
-      console.log("debugging data", data)
       if (currentId == ''){
-        // addNewProduct(data);
+        addNewBook(data);
       }else{
-        // updateProduct(data);
+        updateBook(data);
       }
     }
   }
@@ -186,7 +188,7 @@ export const BookModal = (props) => {
         if (data.success == 1){
           toast.success("Book is Successfully Saved!")
           props.setBooks(data.books)
-        props.closeBookModal();
+        closeBookModal();
           resetForm();
         }else{
           toast.error("Something Went Wrong!")
@@ -196,7 +198,33 @@ export const BookModal = (props) => {
       .finally(() => {
         setIsBookLoading(false);
       });
-    closeBookModal(true);
+  };
+
+  const updateBook = (data) => {
+    fetch(baseUrl + 'update_book/' + currentId, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Authorization': `Bearer ${jwt_token}`,
+      },
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(data => {
+        setIsBookLoading(false);
+        if (data.success == 1){
+          toast.success("Book is Successfully Updated!")
+          props.setBooks(data.books)
+          closeBookModal();
+          resetForm();
+        }else{
+          toast.error("Something Went Wrong!")
+        }
+      })
+      .catch(error => toast.error("Something Went Wrong!"))
+      .finally(() => {
+        setIsBookLoading(false);
+      });
   };
 
   const resetForm = () => {
@@ -227,6 +255,7 @@ export const BookModal = (props) => {
                 <TextField
                   id="name"
                   aria-describedby="name"
+                  disabled={(currentId == '') ? false : true}
                   error={Boolean(validationerrors.bookName)}
                   onChange={onChangeBookName}
                   style={{ minWidth: '95%' }}
