@@ -42,17 +42,26 @@ const AddQuestion = () => {
   const [unitData, setUnitData] = useState([]);
   const [yearData, setYearData] = useState([]);
   const [examGroupData, setExamGroupData] = useState([]);
+  const [books, setBooks] = useState('0');
+  const [booksData, setBooksData] = useState([]);
+  const [topics, setTopics] = useState('0');
+  const [topicsData, setTopicsData] = useState([]);
+  const [examYears, setExamYears] = useState([]);
+  const [examYearsData, setExamYearsData] = useState([]);
+
 
   useEffect(() => {
-    getLevels();
+    getBooks();
+    getExamYears();
+    /*getLevels();
     getSubjects();
     getUnits();
     getYears();
-    getExamGroups();
+    getExamGroups();*/
   }, []);
 
-  const getLevels = () => {
-    fetch(baseUrl + "get-levels", {
+  const getBooks = () => {
+    fetch(baseUrl + "get-books", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -61,28 +70,18 @@ const AddQuestion = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          setLevelData(data.levels);
+          
+          setBooksData(data.books);
+          
         }
       })
       .catch((error) => console.error(error));
   };
-  const getSubjects = () => {
-    fetch(baseUrl + "get-subjects", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          setSubjectData(data.subjects);
-        }
-      })
-      .catch((error) => console.error(error));
-  };
-  const getUnits = () => {
-    fetch(baseUrl + "get-units", {
+  
+  
+  
+  const getUnits = (bookId) => {
+    fetch(baseUrl + "get-units-of-book/" + bookId, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -96,6 +95,37 @@ const AddQuestion = () => {
       })
       .catch((error) => console.error(error));
   };
+  const getTopics = (unitId) => {
+    fetch(baseUrl + "get-topics-of-unit/" + unitId, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          setTopicsData(data.topics);
+        }
+      })
+      .catch((error) => console.error(error));
+  };
+  const getExamYears = () => {
+    fetch(baseUrl + "get-exam-years", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          setExamYearsData(data.years);
+        }
+      })
+      .catch((error) => console.error(error));
+  };
+  
   const getYears = () => {
     fetch(baseUrl + "get-years", {
       method: "GET",
@@ -111,21 +141,7 @@ const AddQuestion = () => {
       })
       .catch((error) => console.error(error));
   };
-  const getExamGroups = () => {
-    fetch(baseUrl + "get-exam-groups", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          setExamGroupData(data.exam_groups);
-        }
-      })
-      .catch((error) => console.error(error));
-  };
+  
 
   const backToAllQuestions = (e) => {
     router.push("/questions");
@@ -156,6 +172,7 @@ const AddQuestion = () => {
   const onChangeLevel = (e) => {
     setLevel(e.target.value);
     getSpecificSubjects(e.target.value);
+
   }
 
   const getSpecificSubjects = (level_id) => {
@@ -195,17 +212,24 @@ const AddQuestion = () => {
       .catch((error) => console.error(error));
   }
 
-  const onChangeSubject = (e) => {
-    setSubject(e.target.value);
-    getSpecificUnit(e.target.value);
+  const onChangeBook = (e) => {
+    //setSubject(e.target.value);
+    //getSpecificUnit(e.target.value);
+    setBooks(e.target.value);
+    getUnits(e.target.value);
   }
 
   const onChangeUnit = (e) => {
     setUnit(e.target.value)
+    getTopics(e.target.value);
+  }
+  const onChangeTopic = (e) => {
+    //setUnit(e.target.value)
+    setTopics(e.target.value);
   }
 
   const onChangeYear = (e) => {
-    setYear(e.target.value)
+    setExamYears(e.target.value)
   }
 
   const onChangeExamGroup = (e) => {
@@ -295,45 +319,26 @@ const AddQuestion = () => {
             <Box>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6} md={6} lg={6}>
-                  <InputLabel htmlFor="level" style={{ position: "unset" }}>
-                    Level
+                  <InputLabel htmlFor="books" style={{ position: "unset" }}>
+                    Book
                   </InputLabel>
                   <Select
-                    labelId="level"
-                    id="level"
-                    onChange={onChangeLevel}
+                    labelId="books"
+                    id="books"
+                    onChange={onChangeBook}
                     style={{ minWidth: "100%" }}
-                    value={level}
-                    error={Boolean(validationerrors.level)}
-                    helperText={validationerrors.level || ""}
+                    value={books}
+                    error={Boolean(validationerrors.books)}
+                    helperText={validationerrors.books || ""}
                   >
-                    {levelData.map((level) => (
-                      <MenuItem key={level.id} value={level.id}>
-                        {level.title}
+                    {booksData.map((book) => (
+                      <MenuItem key={book.id} value={book.id}>
+                        {book.bookname}
                       </MenuItem>
                     ))}
                   </Select>
                 </Grid>
-                <Grid item xs={12} sm={6} md={6} lg={6}>
-                  <InputLabel htmlFor="subject" style={{ position: "unset" }}>
-                    Subject
-                  </InputLabel>
-                  <Select
-                    labelId="subject"
-                    id="subject"
-                    onChange={onChangeSubject}
-                    style={{ minWidth: "100%" }}
-                    value={subject}
-                    error={Boolean(validationerrors.subject)}
-                    helperText={validationerrors.subject || ""}
-                  >
-                    {subjectData.map((subject) => (
-                      <MenuItem key={subject.id} value={subject.id}>
-                        {subject.title}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Grid>
+                
                 <Grid item xs={12} sm={6} md={6} lg={6}>
                   <InputLabel htmlFor="unit" style={{ position: "unset" }}>
                     Unit
@@ -354,6 +359,28 @@ const AddQuestion = () => {
                     ))}
                   </Select>
                 </Grid>
+                
+                <Grid item xs={12} sm={6} md={6} lg={6}>
+                  <InputLabel htmlFor="topic" style={{ position: "unset" }}>
+                    Topic
+                  </InputLabel>
+                  <Select
+                    labelId="topic"
+                    onChange={onChangeTopic}
+                    id="topic"
+                    style={{ minWidth: "100%" }}
+                    value={topics}
+                    error={Boolean(validationerrors.topic)}
+                    helperText={validationerrors.topic || ""}
+                  >
+                    {topicsData.map((topic) => (
+                      <MenuItem key={topic.id} value={topic.id}>
+                        {topic.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
+                
                 <Grid item xs={12} sm={6} md={6} lg={6}>
                   <InputLabel htmlFor="year" style={{ position: "unset" }}>
                     Year
@@ -364,37 +391,18 @@ const AddQuestion = () => {
                     multiple
                     onChange={onChangeYear}
                     style={{ minWidth: "100%" }}
-                    value={year}
+                    value={examYears}
                     error={Boolean(validationerrors.year)}
                     helperText={validationerrors.year || ""}
                   >
-                    {yearData.map((year) => (
+                    {examYearsData.map((year) => (
                       <MenuItem key={year.id} value={year.id}>
-                        {year.number}
+                        {year.name}
                       </MenuItem>
                     ))}
                   </Select>
                 </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={12}>
-                  <InputLabel htmlFor="examGroup" style={{ position: "unset" }}>
-                    Exam Group
-                  </InputLabel>
-                  <Select
-                    labelId="examGroup"
-                    id="examGroup"
-                    onChange={onChangeExamGroup}
-                    style={{ minWidth: "100%" }}
-                    value={examGroup}
-                    error={Boolean(validationerrors.examGroup)}
-                    helperText={validationerrors.examGroup || ""}
-                  >
-                    {examGroupData.map((exam_group) => (
-                      <MenuItem key={exam_group.id} value={exam_group.id}>
-                        {exam_group.title}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Grid>
+
                 <Grid item xs={12} sm={12} md={12} lg={12}>
                   <InputLabel htmlFor="user_name" style={{ position: "unset" }}>
                     Question
