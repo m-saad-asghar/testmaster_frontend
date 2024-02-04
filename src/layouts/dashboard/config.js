@@ -29,6 +29,15 @@ export const items = [
     )
   },
   {
+    title: 'Subjects',
+    path: '/books/subject',
+    icon: (
+      <SvgIcon fontSize="small">
+        <AutoStoriesIcon />
+      </SvgIcon>
+    )
+  },
+  {
     title: 'Questions',
     path: '/questions',
     icon: (
