@@ -356,7 +356,7 @@ const Books = () => {
                         {book.subject}
                       </TableCell>
                       <TableCell>
-                      {book.syllabus.split(',').map(topic => topic.trim()).map((topic, index) => (
+                      {book && book.syllabus && book.syllabus.split(',').map(topic => topic.trim()).map((topic, index) => (
                       <Chip style={{marginRight: "10px", marginBottom: "10px"}} key={index} label={topic} />
                        ))}
                       </TableCell>
