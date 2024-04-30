@@ -241,21 +241,21 @@ const AddQuestion = () => {
   }
 
   const handleSubmit = () => {
+    
     const data = {
-      "level": level,
-      "subject": subject,
-      "unit": unit,
-      "year": year,
-      "exam_group": examGroup,
+      "topicId": topics,
       "question": question,
-      "answers": answer
+      "answers": answer,
+      "years": examYears
+      
+
     }
     submitQuestion(data);
   };
 
   const submitQuestion = (data) => {
     setIsQuestionLoading(true);
-    fetch(baseUrl + "add-question", {
+    fetch(baseUrl + "add-question-of-book", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -283,6 +283,7 @@ const AddQuestion = () => {
     setExamGroup("");
     setQuestion("");
     setAnswer([{ input: "", option: "" }]);
+    setExamYears([]);
   }
 
   return (
@@ -333,7 +334,7 @@ const AddQuestion = () => {
                   >
                     {booksData.map((book) => (
                       <MenuItem key={book.id} value={book.id}>
-                        {book.bookname}
+                        {book.bookName}
                       </MenuItem>
                     ))}
                   </Select>

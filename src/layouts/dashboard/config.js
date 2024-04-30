@@ -20,6 +20,24 @@ export const items = [
     )
   },
   {
+    title: 'Board',
+    path: '/board/board',
+    icon: (
+      <SvgIcon fontSize="small">
+        <AutoStoriesIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Exam Year',
+    path: '/board/year',
+    icon: (
+      <SvgIcon fontSize="small">
+        <AutoStoriesIcon />
+      </SvgIcon>
+    )
+  },
+  {
     title: 'Books',
     path: '/books',
     icon: (
@@ -31,6 +49,24 @@ export const items = [
   {
     title: 'Subjects',
     path: '/books/subject',
+    icon: (
+      <SvgIcon fontSize="small">
+        <AutoStoriesIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Unit',
+    path: '/books/units',
+    icon: (
+      <SvgIcon fontSize="small">
+        <AutoStoriesIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Topic',
+    path: '/books/topics',
     icon: (
       <SvgIcon fontSize="small">
         <AutoStoriesIcon />
